@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import AppContext from "../Context/Context";
 import unplugged from "../assets/unplugged.png";
@@ -10,7 +10,7 @@ const Home = ({ selectedCategory: navbarCategory }) => {
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastProduct, setToastProduct] = useState(null);
-  
+  const navigate = useNavigate();
   // Filtering & Sorting states
   const [categoryFilter, setCategoryFilter] = useState("");
   const [priceRange, setPriceRange] = useState(100000);
@@ -138,7 +138,7 @@ const Home = ({ selectedCategory: navbarCategory }) => {
       <div className="position-fixed top-0 end-0 p-3" style={{ zIndex: 1060 }}>
         <AnimatePresence>
           {showToast && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -149,20 +149,20 @@ const Home = ({ selectedCategory: navbarCategory }) => {
               <div className="toast-header border-bottom py-2 px-3">
                 <span className="bg-success rounded-circle me-2" style={{ width: "10px", height: "10px", display: "inline-block" }}></span>
                 <strong className="me-auto" style={{ color: "var(--text-primary)" }}>Item Added to Cart</strong>
-                <button 
-                  type="button" 
-                  className="btn-close shadow-none" 
+                <button
+                  type="button"
+                  className="btn-close shadow-none"
                   onClick={() => setShowToast(false)}
                 ></button>
               </div>
               <div className="toast-body p-3">
                 {toastProduct && (
                   <div className="d-flex align-items-center gap-3">
-                    <img 
-                      src={convertBase64ToDataURL(toastProduct.imageData)} 
-                      alt={toastProduct.name} 
-                      className="rounded border" 
-                      width="50" 
+                    <img
+                      src={convertBase64ToDataURL(toastProduct.imageData)}
+                      alt={toastProduct.name}
+                      className="rounded border"
+                      width="50"
                       height="50"
                       style={{ objectFit: "cover" }}
                       onError={(e) => { e.target.src = unplugged; }}
@@ -181,11 +181,11 @@ const Home = ({ selectedCategory: navbarCategory }) => {
 
       {/* Hero Banner Section */}
       <div className="container px-4 mb-5 mt-4">
-        <div 
+        <div
           className="rounded-lg p-5 d-flex flex-column justify-content-center position-relative overflow-hidden shadow-sm"
-          style={{ 
+          style={{
             background: "linear-gradient(135deg, rgba(239, 246, 255, 0.9) 0%, rgba(219, 234, 254, 0.4) 100%)",
-            minHeight: "280px", 
+            minHeight: "280px",
             borderRadius: "var(--radius-lg)",
             border: "1px solid var(--border-color)"
           }}
@@ -218,7 +218,7 @@ const Home = ({ selectedCategory: navbarCategory }) => {
       {/* Products & Filters Container */}
       <div className="container px-4" id="products-section">
         <div className="row">
-          
+
           {/* Filters Sidebar (Desktop) */}
           <div className="col-lg-3 d-none d-lg-block">
             <div className="card border-0 shadow-sm p-4 sticky-top" style={{ top: "100px", borderRadius: "var(--radius-md)", backgroundColor: "var(--bg-card)" }}>
@@ -278,14 +278,14 @@ const Home = ({ selectedCategory: navbarCategory }) => {
 
           {/* Product Listing Main Section */}
           <div className="col-lg-9">
-            
+
             {/* Control Bar (Mobile Filters toggle & Sorting dropdown) */}
-            <div 
+            <div
               className="d-flex flex-wrap justify-content-between align-items-center p-3 mb-4 rounded-md shadow-sm"
               style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border-color)", borderRadius: "var(--radius-md)" }}
             >
               <div className="d-flex align-items-center gap-3">
-                <button 
+                <button
                   className="btn btn-outline-primary d-lg-none d-flex align-items-center gap-2"
                   onClick={() => setShowMobileFilters(true)}
                 >
@@ -298,9 +298,9 @@ const Home = ({ selectedCategory: navbarCategory }) => {
 
               <div className="d-flex align-items-center gap-2">
                 <span className="text-muted d-none d-sm-inline">Sort by:</span>
-                <select 
-                  className="form-select py-1 px-3" 
-                  value={sortBy} 
+                <select
+                  className="form-select py-1 px-3"
+                  value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                   style={{ width: "180px", height: "38px" }}
                 >
@@ -316,7 +316,7 @@ const Home = ({ selectedCategory: navbarCategory }) => {
             {/* Mobile Filters Modal */}
             <AnimatePresence>
               {showMobileFilters && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -324,7 +324,7 @@ const Home = ({ selectedCategory: navbarCategory }) => {
                   style={{ zIndex: 1100 }}
                   onClick={() => setShowMobileFilters(false)}
                 >
-                  <motion.div 
+                  <motion.div
                     initial={{ x: 300 }}
                     animate={{ x: 0 }}
                     exit={{ x: 300 }}
@@ -388,7 +388,7 @@ const Home = ({ selectedCategory: navbarCategory }) => {
             </AnimatePresence>
 
             {/* Product Grid */}
-            <motion.div 
+            <motion.div
               className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4"
               variants={containerVariants}
               initial="hidden"
@@ -404,10 +404,10 @@ const Home = ({ selectedCategory: navbarCategory }) => {
               ) : (
                 sortedProducts.map((product) => {
                   const { id, brand, name, price, productAvailable, imageData, stockQuantity } = product;
-                  
+
                   return (
-                    <motion.div 
-                      className="col" 
+                    <motion.div
+                      className="col"
                       key={id}
                       variants={itemVariants}
                     >
@@ -431,7 +431,7 @@ const Home = ({ selectedCategory: navbarCategory }) => {
                             )}
 
                             <img
-                              src={convertBase64ToDataURL(imageData)} 
+                              src={convertBase64ToDataURL(imageData)}
                               alt={name}
                               className="img-fluid"
                               style={{ maxHeight: "160px", objectFit: "contain" }}
@@ -446,14 +446,14 @@ const Home = ({ selectedCategory: navbarCategory }) => {
                             <span className="text-uppercase text-muted fw-bold" style={{ fontSize: "0.75rem", letterSpacing: "0.05em" }}>
                               {brand}
                             </span>
-                            <h6 
-                              className="card-title fw-semibold text-truncate mb-2 mt-1 text-capitalize" 
+                            <h6
+                              className="card-title fw-semibold text-truncate mb-2 mt-1 text-capitalize"
                               style={{ fontSize: "1rem", color: "var(--text-primary)" }}
                               title={name}
                             >
                               {name}
                             </h6>
-                            
+
                             <div className="mt-auto pt-3 d-flex align-items-center justify-content-between">
                               <div>
                                 <span className="text-muted small">Price</span>
@@ -464,21 +464,23 @@ const Home = ({ selectedCategory: navbarCategory }) => {
 
                               <div className="d-flex gap-2">
                                 {/* Quick View Button icon */}
-                                <Link 
-                                  to={`/product/${id}`}
+                                <button
                                   className="btn btn-outline-primary p-2 rounded-circle"
-                                  style={{ width: "38px", height: "38px", minWidth: "38px" }}
-                                  title="View details"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    navigate(`/product/${id}`);
+                                  }}
                                 >
-                                  <FiEye size={16} />
-                                </Link>
+                                  <FiEye />
+                                </button>
 
                                 {/* Cart Button Icon */}
                                 <button
                                   className="btn btn-primary p-2 rounded-circle"
                                   onClick={(e) => handleAddToCart(e, product)}
                                   disabled={!productAvailable || stockQuantity === 0}
-                                  style={{ width: "38px", height: "38px", minWidth: "38px" }}
+                                  style={{ width: "60px", height: "38px", minWidth: "38px" }}
                                   title="Add to cart"
                                 >
                                   <FiShoppingCart size={16} />

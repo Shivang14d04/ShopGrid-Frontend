@@ -45,10 +45,10 @@ const Navbar = ({ onSelectCategory }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (input.trim() === "") return;
-    
+
     setIsLoading(true);
     setIsNavCollapsed(true);
-    
+
     try {
       const response = await axios.get(`/products/search?keyword=${input}`);
       navigate(`/search-results`, { state: { searchData: response.data } });
@@ -73,16 +73,16 @@ const Navbar = ({ onSelectCategory }) => {
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <nav 
-      className="navbar navbar-expand-lg fixed-top glass-panel shadow-sm py-3" 
+    <nav
+      className="navbar navbar-expand-lg fixed-top glass-panel shadow-sm py-3"
       ref={navbarRef}
       style={{ zIndex: 1030 }}
     >
       <div className="container px-4">
         {/* Logo */}
         <Link className="navbar-brand d-flex align-items-center gap-2" to="/" onClick={handleLinkClick}>
-          <span 
-            className="d-inline-block bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
+          <span
+            className="d-inline-block bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
             style={{ width: "32px", height: "32px", fontSize: "0.9rem", fontWeight: "bold" }}
           >
             E
@@ -138,8 +138,8 @@ const Navbar = ({ onSelectCategory }) => {
             {/* Search Box */}
             <form className="position-relative flex-grow-1" onSubmit={handleSubmit}>
               <div className="input-group">
-                <span 
-                  className="input-group-text bg-transparent border-end-0 text-muted" 
+                <span
+                  className="input-group-text bg-transparent border-end-0 text-muted"
                   style={{ borderTopLeftRadius: "20px", borderBottomLeftRadius: "20px" }}
                 >
                   <FiSearch />
@@ -164,8 +164,8 @@ const Navbar = ({ onSelectCategory }) => {
             {/* Icons Actions Bar */}
             <div className="d-flex align-items-center gap-3">
               {/* Theme Toggle Button */}
-              <button 
-                onClick={toggleTheme} 
+              <button
+                onClick={toggleTheme}
                 className="btn btn-link nav-link p-2 text-secondary border-0 shadow-none"
                 aria-label="Toggle theme"
               >
@@ -173,14 +173,14 @@ const Navbar = ({ onSelectCategory }) => {
               </button>
 
               {/* Cart Button */}
-              <Link 
-                to="/cart" 
+              <Link
+                to="/cart"
                 className="btn btn-link nav-link p-2 text-secondary position-relative border-0 shadow-none"
                 onClick={handleLinkClick}
               >
                 <FiShoppingCart size={21} />
                 {cartItemCount > 0 && (
-                  <span 
+                  <span
                     className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white"
                     style={{ fontSize: "0.7rem", padding: "0.25em 0.5em" }}
                   >
@@ -197,7 +197,7 @@ const Navbar = ({ onSelectCategory }) => {
                     className="btn btn-link nav-link p-1 d-flex align-items-center gap-2 border-0 shadow-none"
                     aria-expanded={profileDropdownOpen}
                   >
-                    <div 
+                    <div
                       className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-semibold text-uppercase"
                       style={{ width: "36px", height: "36px", fontSize: "0.9rem" }}
                     >
@@ -206,7 +206,7 @@ const Navbar = ({ onSelectCategory }) => {
                   </button>
 
                   {profileDropdownOpen && (
-                    <div 
+                    <div
                       className="position-absolute end-0 mt-2 p-2 bg-white text-dark rounded shadow-lg border"
                       style={{ width: "240px", zIndex: 1050, backgroundColor: "var(--bg-card)", color: "var(--text-primary)" }}
                     >
@@ -216,11 +216,11 @@ const Navbar = ({ onSelectCategory }) => {
                           {currentUser?.role?.replace("ROLE_", "")}
                         </span>
                       </div>
-                      
+
                       <div className="py-1">
                         {currentUser?.role === "ROLE_ADMIN" && (
-                          <Link 
-                            to="/admin" 
+                          <Link
+                            to="/admin"
                             className="dropdown-item px-3 py-2 d-flex align-items-center gap-2"
                             onClick={handleLinkClick}
                             style={{ color: "var(--text-secondary)" }}
@@ -228,8 +228,8 @@ const Navbar = ({ onSelectCategory }) => {
                             <FiSliders size={16} /> Admin Dashboard
                           </Link>
                         )}
-                        <Link 
-                          to="/orders" 
+                        <Link
+                          to="/orders"
                           className="dropdown-item px-3 py-2 d-flex align-items-center gap-2"
                           onClick={handleLinkClick}
                           style={{ color: "var(--text-secondary)" }}

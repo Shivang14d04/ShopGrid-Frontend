@@ -90,8 +90,8 @@ const Product = () => {
   // Find related products in the same category
   const relatedProducts = allProducts
     ? allProducts
-        .filter((p) => p.category === product?.category && p.id !== product?.id)
-        .slice(0, 4)
+      .filter((p) => p.category === product?.category && p.id !== product?.id)
+      .slice(0, 4)
     : [];
 
   const convertBase64ToDataURL = (base64String, mimeType = 'image/jpeg') => {
@@ -117,8 +117,8 @@ const Product = () => {
     <div className="main-layout" style={{ minHeight: "100vh" }}>
       <div className="container px-4">
         {/* Back Button */}
-        <button 
-          onClick={() => navigate(-1)} 
+        <button
+          onClick={() => navigate(-1)}
           className="btn btn-secondary btn-sm mb-4 d-inline-flex align-items-center gap-2 border shadow-none"
         >
           <FiArrowLeft /> Back to products
@@ -151,7 +151,7 @@ const Product = () => {
 
                 <h1 className="fw-bold mb-2 text-capitalize" style={{ color: "var(--text-primary)" }}>{product.name}</h1>
                 <p className="text-muted mb-4 fst-italic">Brand: <span className="fw-semibold">{product.brand}</span></p>
-                
+
                 {/* Stock Status Badge */}
                 <div className="mb-4">
                   {product.stockQuantity === 0 ? (
@@ -180,16 +180,16 @@ const Product = () => {
                 {inStock ? (
                   <div className="d-flex flex-wrap align-items-center gap-3 mb-4">
                     <div className="d-flex align-items-center border rounded-sm" style={{ backgroundColor: "var(--bg-card)" }}>
-                      <button 
-                        className="btn btn-link text-secondary p-2 border-0 shadow-none" 
+                      <button
+                        className="btn btn-link text-secondary p-2 border-0 shadow-none"
                         onClick={handleDecreaseQty}
                         disabled={qty <= 1}
                       >
                         <FiMinus />
                       </button>
                       <span className="px-3 fw-bold text-center" style={{ minWidth: "40px" }}>{qty}</span>
-                      <button 
-                        className="btn btn-link text-secondary p-2 border-0 shadow-none" 
+                      <button
+                        className="btn btn-link text-secondary p-2 border-0 shadow-none"
                         onClick={handleIncreaseQty}
                         disabled={qty >= product.stockQuantity}
                       >
@@ -215,17 +215,17 @@ const Product = () => {
                   <div className="border-top pt-4 mt-2">
                     <h6 className="fw-semibold text-danger mb-3">Admin Actions</h6>
                     <div className="d-flex gap-3">
-                      <button 
+                      <button
                         className="btn btn-outline-primary flex-grow-1 d-flex align-items-center justify-content-center gap-2"
-                        type="button" 
+                        type="button"
                         onClick={handleEditClick}
                       >
                         <FiEdit size={16} /> Update Details
                       </button>
 
-                      <button 
+                      <button
                         className="btn btn-outline-danger flex-grow-1 d-flex align-items-center justify-content-center gap-2"
-                        type="button" 
+                        type="button"
                         onClick={deleteProduct}
                       >
                         <FiTrash2 size={16} /> Delete Product
@@ -248,9 +248,9 @@ const Product = () => {
                   <div className="premium-card h-100 d-flex flex-column border">
                     <Link to={`/product/${p.id}`} className="text-decoration-none text-dark d-flex flex-column h-100">
                       <div className="image-zoom-container p-3 d-flex align-items-center justify-content-center" style={{ height: "150px" }}>
-                        <img 
-                          src={convertBase64ToDataURL(p.imageData)} 
-                          alt={p.name} 
+                        <img
+                          src={convertBase64ToDataURL(p.imageData)}
+                          alt={p.name}
                           className="img-fluid"
                           style={{ maxHeight: "120px", objectFit: "contain" }}
                           onError={(e) => { e.target.src = unplugged; }}

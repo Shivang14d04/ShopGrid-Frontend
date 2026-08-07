@@ -8,18 +8,32 @@ const AppContext = createContext({
   cart: [],
   isAuthenticated: false,
   currentUser: null,
-  addToCart: (product) => {},
+  addToCart: (product, count) => {},
   removeFromCart: (productId) => {},
-  refreshData:() =>{},
-  updateStockQuantity: (productId, newQuantity) =>{},
+  refreshData: () => {},
+  updateStockQuantity: (productId, newQuantity) => {},
+  clearCart: () => {},
   login: (token) => {},
   logout: () => {},
 });
 
+const getCartKey = (username) => `cart_${username}`;
+
+const loadCart = (username) => {
+  if (!username) return [];
+  const saved = localStorage.getItem(getCartKey(username));
+  return saved ? JSON.parse(saved) : [];
+};
+
+const saveCart = (username, cart) => {
+  if (!username) return;
+  localStorage.setItem(getCartKey(username), JSON.stringify(cart));
+};
+
 export const AppProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const [isError, setIsError] = useState("");
-  const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
+  
   const [authToken, setAuthToken] = useState(getToken());
   const [currentUser, setCurrentUser] = useState(() => {
     const decoded = decodeToken(getToken());
@@ -31,30 +45,48 @@ export const AppProvider = ({ children }) => {
       : null;
   });
 
+  const [cart, setCart] = useState(() => {
+    const decoded = decodeToken(getToken());
+    if (decoded && decoded.sub) {
+      return loadCart(decoded.sub);
+    }
+    return [];
+  });
+
   const addToCart = (product, count = 1) => {
+    if (!currentUser?.username) return; // Cart remains empty if no user is logged in
+    
+    let updatedCart;
     const existingProductIndex = cart.findIndex((item) => item.id === product.id);
+    
     if (existingProductIndex !== -1) {
-      const updatedCart = cart.map((item, index) =>
+      updatedCart = cart.map((item, index) =>
         index === existingProductIndex
           ? { ...item, quantity: Math.min(item.quantity + count, product.stockQuantity) }
           : item
       );
-      setCart(updatedCart);
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
     } else {
-      const { imageData, ...productWithoutImage } = product; // ← only change
-      const updatedCart = [...cart, { ...productWithoutImage, quantity: count }];
-      setCart(updatedCart);
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      const { imageData, ...productWithoutImage } = product;
+      updatedCart = [...cart, { ...productWithoutImage, quantity: count }];
     }
+    
+    setCart(updatedCart);
+    saveCart(currentUser.username, updatedCart);
   };
 
   const removeFromCart = (productId) => {
-    console.log("productID",productId)
+    if (!currentUser?.username) return;
+    
     const updatedCart = cart.filter((item) => item.id !== productId);
     setCart(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    console.log("CART",cart)
+    saveCart(currentUser.username, updatedCart);
+  };
+
+  const clearCart = () => {
+    setCart([]);
+    if (currentUser?.username) {
+      saveCart(currentUser.username, []);
+    }
   };
 
   const refreshData = async () => {
@@ -66,38 +98,35 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const clearCart =() =>{
-    setCart([]);
-  }
-
   const login = (token) => {
     setToken(token);
     setAuthToken(token);
     const decoded = decodeToken(token);
-    setCurrentUser(
-      decoded
-        ? {
-            username: decoded.sub || null,
-            role: decoded.role || null,
-          }
-        : null
-    );
+    
+    if (decoded && decoded.sub) {
+      const user = {
+        username: decoded.sub,
+        role: decoded.role || null,
+      };
+      setCurrentUser(user);
+      setCart(loadCart(user.username));
+    } else {
+      setCurrentUser(null);
+      setCart([]);
+    }
   };
 
   const logout = () => {
     clearStoredAuth();
     setAuthToken(null);
     setCurrentUser(null);
+    setCart([]); // Clear in-memory cart state; user's cart is safely preserved in localStorage
   };
   
   useEffect(() => {
     refreshData();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart]);
-  
   return (
     <AppContext.Provider value={{
       data,
