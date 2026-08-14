@@ -19,12 +19,33 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
+      console.log("=== REGISTER START ===");
+      console.log("VITE_BASE_URL:", import.meta.env.VITE_BASE_URL);
+      console.log("Axios baseURL:", API.defaults.baseURL);
+      console.log("Request URL:", `${API.defaults.baseURL}/auth/register`);
+
       const res = await API.post("/auth/register", form);
+
+      console.log("=== REGISTER SUCCESS ===");
+      console.log("Status:", res.status);
+      console.log("Data:", res.data);
+
       toast.success(res.data.message || "User registered successfully");
+
       navigate("/login");
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Unable to register");
+      console.error("=== REGISTER FAILED ===");
+      console.error("Message:", err.message);
+      console.error("Status:", err.response?.status);
+      console.error("Response:", err.response?.data);
+      console.error("URL:", err.config?.baseURL + err.config?.url);
+
+      toast.error(
+        err.response?.data?.message ||
+        `Registration failed (${err.response?.status || "unknown"})`
+      );
     } finally {
       setLoading(false);
     }
