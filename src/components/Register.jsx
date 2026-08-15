@@ -23,23 +23,28 @@ const Register = () => {
     setLoading(true);
     try {
       const res = await API.post("/auth/register", form);
-      if (res.data?.token) {
-        login(res.data.token);
-      } else {
+      let token = res.data?.token;
+
+      if (!token) {
         try {
           const loginRes = await API.post("/auth/login", {
             username: form.username,
             password: form.password,
           });
-          if (loginRes.data?.token) {
-            login(loginRes.data.token);
-          }
+          token = loginRes.data?.token;
         } catch (loginErr) {
           console.error("Auto-login error:", loginErr);
         }
       }
-      toast.success(res.data?.message || "User registered successfully");
-      navigate("/", { replace: true });
+
+      if (token) {
+        login(token);
+        toast.success("Registered & logged in successfully!");
+        navigate("/", { replace: true });
+      } else {
+        toast.info("Account created successfully. Please log in.");
+        navigate("/login", { replace: true });
+      }
     } catch (err) {
       toast.error(err?.response?.data?.message || "Unable to register");
     } finally {
