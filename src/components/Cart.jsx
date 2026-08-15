@@ -97,7 +97,7 @@ const Cart = () => {
             </svg>
             <h3 className="fw-bold mb-2">Your Cart is Empty</h3>
             <p className="text-secondary mb-4 mx-auto" style={{ maxWidth: "360px" }}>
-              Looks like you haven't added anything to your cart yet. Head back to the store to find some products!
+              Looks like you haven&apos;t added anything to your cart yet. Head back to the store to find some products!
             </p>
             <Link to="/" className="btn btn-primary px-4 py-2.5 shadow-none">
               <FiShoppingBag /> Explore Store

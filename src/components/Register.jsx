@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import API from "../axios";
+import AppContext from "../Context/Context";
 import { motion } from "framer-motion";
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
 import EcommerceIllustration from "./EcommerceIllustration";
@@ -11,6 +12,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { login } = useContext(AppContext);
 
   const handleChange = (e) => {
     setForm((c) => ({ ...c, [e.target.name]: e.target.value }));
@@ -21,8 +23,23 @@ const Register = () => {
     setLoading(true);
     try {
       const res = await API.post("/auth/register", form);
-      toast.success(res.data.message || "User registered successfully");
-      navigate("/login");
+      if (res.data?.token) {
+        login(res.data.token);
+      } else {
+        try {
+          const loginRes = await API.post("/auth/login", {
+            username: form.username,
+            password: form.password,
+          });
+          if (loginRes.data?.token) {
+            login(loginRes.data.token);
+          }
+        } catch (loginErr) {
+          console.error("Auto-login error:", loginErr);
+        }
+      }
+      toast.success(res.data?.message || "User registered successfully");
+      navigate("/", { replace: true });
     } catch (err) {
       toast.error(err?.response?.data?.message || "Unable to register");
     } finally {

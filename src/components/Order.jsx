@@ -191,7 +191,7 @@ const Order = () => {
             <FiShoppingBag size={48} className="text-muted mb-3" />
             <h5 className="fw-bold mb-2">No Orders Found</h5>
             <p className="text-secondary mb-4 mx-auto" style={{ maxWidth: "300px" }}>
-              We couldn't find any orders matching your search or filters.
+              We couldn&apos;t find any orders matching your search or filters.
             </p>
             <Link to="/" className="btn btn-primary px-4 py-2">Continue Shopping</Link>
           </div>
